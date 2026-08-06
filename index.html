@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EEE Dept. — Student Performance Evaluation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --navy: #1B2740;
+      --navy-soft: #2C3B5C;
+      --brass: #B8873B;
+      --brass-soft: #E4C892;
+      --paper: #F7F5EF;
+      --paper-line: #DCD5C4;
+      --ink: #22262E;
+      --slate: #5B6270;
+      --green: #4C7A5E;
+      --red: #A8432F;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'IBM Plex Sans', sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 24px 96px;
+    }
+
+    /* Letterhead */
+    .letterhead {
+      border-top: 3px solid var(--navy);
+      border-bottom: 1px solid var(--navy);
+      padding: 28px 0 20px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .letterhead .eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--brass);
+      margin-bottom: 10px;
+    }
+
+    .letterhead h1 {
+      font-family: 'Source Serif 4', serif;
+      font-weight: 700;
+      font-size: clamp(22px, 4vw, 30px);
+      color: var(--navy);
+      margin: 0 0 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .letterhead .sub {
+      font-size: 13px;
+      color: var(--slate);
+    }
+
+    /* Steps */
+    .step {
+      margin-bottom: 36px;
+    }
+
+    .step-label {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .step-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--brass);
+      border: 1px solid var(--brass-soft);
+      border-radius: 2px;
+      padding: 2px 7px;
+    }
+
+    .step-title {
+      font-family: 'Source Serif 4', serif;
+      font-weight: 600;
+      font-size: 19px;
+      color: var(--navy);
+    }
+
+    .step-hint {
+      font-size: 13px;
+      color: var(--slate);
+      margin: 0 0 14px 40px;
+    }
+
+    select,
+    textarea,
+    input[type=text] {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 15px;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--paper-line);
+      border-radius: 3px;
+      padding: 11px 13px;
+      width: 100%;
+    }
+
+    select:focus,
+    textarea:focus,
+    input:focus {
+      outline: 2px solid var(--brass);
+      outline-offset: 1px;
+      border-color: var(--brass);
+    }
+
+    .field-wrap {
+      margin-left: 40px;
+    }
+
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235B6270' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 13px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    /* Course chips */
+    .course-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .course-chip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--paper-line);
+      background: #fff;
+      border-radius: 3px;
+      padding: 13px 15px;
+      cursor: pointer;
+      transition: border-color .12s ease, background .12s ease;
+    }
+
+    .course-chip:hover {
+      border-color: var(--brass-soft);
+    }
+
+    .course-chip.selected {
+      border-color: var(--brass);
+      background: #FBF6EC;
+    }
+
+    .course-chip input[type=radio] {
+      accent-color: var(--brass);
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .course-code {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12.5px;
+      color: var(--navy);
+      background: var(--paper);
+      border: 1px solid var(--paper-line);
+      border-radius: 2px;
+      padding: 2px 7px;
+      white-space: nowrap;
+    }
+
+    .course-title {
+      font-size: 14.5px;
+      color: var(--ink);
+    }
+
+    /* Student table */
+    .student-card {
+      border: 1px solid var(--paper-line);
+      border-radius: 4px;
+      background: #fff;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .student-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 14px 18px;
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .student-name {
+      font-weight: 600;
+      font-size: 14.5px;
+    }
+
+    .student-matric {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--brass-soft);
+    }
+
+    .student-body {
+      padding: 16px 18px 18px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 16px 20px;
+    }
+
+    @media (max-width:560px) {
+      .student-body {
+        grid-template-columns: 1fr;
+      }
+
+      .field-wrap {
+        margin-left: 0;
+      }
+
+      .step-hint {
+        margin-left: 0;
+      }
+    }
+
+    .rating-block label,
+    .comment-block label {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--slate);
+      margin-bottom: 7px;
+    }
+
+    .comment-block {
+      grid-column: 1 / -1;
+    }
+
+    .scale {
+      display: flex;
+      gap: 6px;
+    }
+
+    .scale button {
+      flex: 1;
+      padding: 9px 0;
+      border: 1px solid var(--paper-line);
+      background: #fff;
+      border-radius: 3px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--slate);
+      cursor: pointer;
+      transition: all .1s ease;
+    }
+
+    .scale button:hover {
+      border-color: var(--brass);
+    }
+
+    .scale button.active {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #fff;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 56px;
+      font-size: 14px;
+    }
+
+    /* Scale legend */
+    .scale-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 16px;
+      margin: 0 0 14px 40px;
+      padding: 10px 14px;
+      background: #fff;
+      border: 1px solid var(--paper-line);
+      border-radius: 3px;
+    }
+
+    @media (max-width:560px) {
+      .scale-legend {
+        margin-left: 0;
+      }
+    }
+
+    .scale-legend span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11.5px;
+      color: var(--slate);
+    }
+
+    .scale-legend b {
+      color: var(--navy);
+    }
+
+    /* Submit area */
+    .submit-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 8px;
+      margin-left: 40px;
+    }
+
+    button.primary {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      padding: 13px 26px;
+      cursor: pointer;
+      transition: background .12s ease;
+    }
+
+    button.primary:hover {
+      background: var(--navy-soft);
+    }
+
+    button.primary:disabled {
+      background: #9AA1AE;
+      cursor: not-allowed;
+    }
+
+    .status {
+      font-size: 13.5px;
+    }
+
+    .status.ok {
+      color: var(--green);
+    }
+
+    .status.err {
+      color: var(--red);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .empty-note {
+      margin-left: 40px;
+      font-size: 13.5px;
+      color: var(--slate);
+      font-style: italic;
+    }
+
+    footer {
+      margin-top: 56px;
+      padding-top: 18px;
+      border-top: 1px solid var(--paper-line);
+      font-size: 11.5px;
+      color: var(--slate);
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+
+    <div class="letterhead">
+      <div class="eyebrow">Department of Electrical &amp; Electronic Engineering</div>
+      <h1>Student Performance Evaluation</h1>
+      <div class="sub">Faculty of Engineering and Technology · Second Semester 2025/2026 · M.Eng Programme</div>
+    </div>
+
+    <form id="evalForm">
+
+      <!-- Step 1: Lecturer -->
+      <div class="step">
+        <div class="step-label"><span class="step-num">01</span><span class="step-title">Select your name</span></div>
+        <p class="step-hint">This determines the course(s) available for evaluation below.</p>
+        <div class="field-wrap">
+          <select id="lecturerSelect" required>
+            <option value="" disabled selected>— Choose lecturer —</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Step 2: Course -->
+      <div class="step">
+        <div class="step-label"><span class="step-num">02</span><span class="step-title">Select the course</span></div>
+        <p class="step-hint">Choose which course you are submitting evaluations for.</p>
+        <div class="field-wrap">
+          <div id="courseList" class="course-list">
+            <p class="empty-note" style="margin-left:0;">Select a lecturer first.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Students -->
+      <div class="step">
+        <div class="step-label"><span class="step-num">03</span><span class="step-title">Rate &amp; comment</span></div>
+        <p class="step-hint">Rate each student across the criteria below, and add a comment.</p>
+        <div class="scale-legend">
+          <span><b>1</b> Poor</span>
+          <span><b>2</b> Better</span>
+          <span><b>3</b> Neutral</span>
+          <span><b>4</b> More Good</span>
+          <span><b>5</b> Excellent</span>
+        </div>
+        <div class="field-wrap" style="margin-bottom:10px;">
+          <label for="programFilter" style="display:block; margin-bottom:6px; font-weight:600;">Filter students by
+            level/program</label>
+          <select id="programFilter">
+            <option value="All">All students</option>
+            <option value="PhD">PhD</option>
+            <option value="M.Eng">M.Eng</option>
+            <option value="PGD">PGD</option>
+            <option value="Undergrad">Undergrad (100L–500L)</option>
+          </select>
+        </div>
+        <div class="field-wrap" id="studentContainer">
+          <p class="empty-note" style="margin-left:0;">Select a course to load the student list.</p>
+        </div>
+      </div>
+
+      <div class="submit-row">
+        <button type="submit" class="primary" id="submitBtn" disabled>Submit evaluations</button>
+        <span id="progressMsg" class="status"></span>
+        <span id="statusMsg" class="status"></span>
+      </div>
+
+    </form>
+
+    <footer>EEE Department Internal Tool · Responses are recorded to the department evaluation sheet</footer>
+  </div>
+
+  <script>
+    /* =========================================================
+       1. CONSTANT DECLARATIONS
+       ========================================================= */
+
+    const COURSE_ALLOCATION = [
+      {
+        lecturer: "Aborisade D.O.", courses: [
+          { code: "EEE 512", title: "Modern Control Engineering" },
+          { code: "EEC 712", title: "Applied Process Control" },
+          { code: "EEC 713", title: "Adaptive and Optimal Control Systems" }
+        ]
+      },
+      {
+        lecturer: "Adesina O.B.", courses: [
+          { code: "LCU-EEE 211", title: "Skill Acquisition in Electrical Wiring Design and Installation I" },
+          { code: "EEE 214", title: "Electrical Engineering Materials" },
+          { code: "EEE 615", title: "Electrical Engineering Lab" },
+          { code: "EEE 711", title: "Seminar" },
+          { code: "EEP 717", title: "Adjustable Speed Motor Drives" },
+          { code: "EEP 712", title: "Electrical Machines and Power Engineering Group Project" },
+          { code: "EEC 714", title: "Control and Instrumentation Group Project" },
+          { code: "EEE 921", title: "MPhil/PhD Seminar" },
+          { code: "EEE 930", title: "Seminar I" },
+          { code: "EEE 940", title: "Seminar II" }
+        ]
+      },
+      {
+        lecturer: "Ajenikoko G.A.", courses: [
+          { code: "EEP 711", title: "Analysis and Control of Electric Power Systems" },
+          { code: "EEP 714", title: "Power System Dynamics" },
+          { code: "EEE 612", title: "Electrical Power Principles" }
+        ]
+      },
+      {
+        lecturer: "Akinde O.K.", courses: [
+          { code: "EEE 514", title: "Use of Engineering Software and Packages" },
+          { code: "COM 716", title: "Network Security" },
+          { code: "COM 713", title: "Signal Processing" },
+          { code: "EEE 911", title: "Modeling and Simulation Techniques for Advanced Research" }
+        ]
+      },
+      {
+        lecturer: "Ayanlade S.O.", courses: [
+          { code: "EEE 534", title: "Power Systems Engineering" },
+          { code: "EEE 618", title: "Power System Engineering" },
+          { code: "EEE 715", title: "Power Electronics" }
+        ]
+      },
+      {
+        lecturer: "EnochOghene S.O.", courses: [
+          { code: "LCU-EEE 213", title: "Skill Acquisition in Computer Network Design and Installation" },
+          { code: "LCU-CCS 311", title: "Character, Code and Service" },
+          { code: "LCU-EEE 319", title: "Laboratory Practical II and Mini-Project" },
+          { code: "EEE 314 / LCUMCE 311", title: "Microcontroller and Embedded Systems" },
+          { code: "LCU-EEE 411", title: "Complex Engineering System Research and Development" },
+          { code: "EEE 511", title: "Microcontroller Applications and Embedded Systems" },
+          { code: "EEE 519", title: "Assigned Project II" },
+          { code: "EEE 617", title: "Technical Report Writing" },
+          { code: "EEC 711", title: "Electrical Engineering Materials" },
+          { code: "COM 711", title: "Mobile Application Development" }
+        ]
+      },
+      {
+        lecturer: "Kamil I.O.", courses: [
+          { code: "EEE 312", title: "Digital Electronic Circuits" },
+          { code: "COM 715", title: "Satellite Communications" },
+          { code: "EEE 912", title: "Advanced Digital Signal Processing" }
+        ]
+      },
+      {
+        lecturer: "Bello S.", courses: [
+          { code: "EEE 536", title: "Renewable Energy Systems" }
+        ]
+      },
+      {
+        lecturer: "Ogunseye A.A.", courses: [
+          { code: "EEE 212", title: "Applied Electricity II" },
+          { code: "EEE 613", title: "Communication Principles" },
+          { code: "COM 712", title: "Optical Fiber Communication" }
+        ]
+      },
+      {
+        lecturer: "Oladejo I.O.", courses: [
+          { code: "EEE 513", title: "Power Electronics and Devices" },
+          { code: "EEE 614", title: "Electrical Measurement and Instrumentation" },
+          { code: "EEE 616", title: "Circuit Theory II" }
+        ]
+      },
+      {
+        lecturer: "Oluwatomi A.A.", courses: [
+          { code: "GET 210", title: "Engineering Mathematics II" },
+          { code: "GET 312", title: "Engineering Mathematics IV" },
+          { code: "EEE 611", title: "Engineering Mathematics II" },
+          { code: "COM 714", title: "Communications Engineering Group Project" }
+        ]
+      }
+    ];
+
+    /* ⚠️ FILL THIS IN: set each student's option to "Power", "Control", or
+       "Communication" (must match the keys in OPTIONS below exactly).
+       Leave "" (blank) for students you haven't assigned yet — blank-option
+       students show up under EVERY course so nobody gets accidentally hidden
+       until you tag them. */
+    const STUDENTS = [
+      { matric: "LCU/PG/007984", name: "ADEOGUN OLUKUNMI FRANCIS", option: "Communication", program: "MPhil/PhD" },
+      { matric: "LCU/PG/008337", name: "ALASE DAVID AYOMIDE", option: "Power", program: "M.Eng" },
+      { matric: "LCU/PG/009627", name: "OMOGBEMINIYI AYODELE MICHAEL", option: "Power", program: "PGD" },
+      { matric: "LCU/PG/007182", name: "KAZEEM OLADIMEJI LESHI", option: "Power", program: "M.Eng" },
+      { matric: "LCU/PG/008438", name: "ADEKOYA DANIEL OLUSEGUN", option: "Power", program: "PhD" },
+      { matric: "LCU/PG/0012537", name: "AYOOLA IDRIS OREOLUWA", option: "Power", program: "PGD" },
+      { matric: "LCU/PG/0012009", name: "BALOGUN OLUWASEGUN JOSEPH", option: "Power", program: "M.Eng" },
+      { matric: "LCU/PG/008940", name: "TAIWO ADEDOLAPO OLUSEYI", option: "Control", program: "M.Eng" },
+      { matric: "PG/LCU/007953", name: "AROWOLO MUYIWA PAUL", option: "Power", program: "MPhil/PhD" },
+      { matric: "LCU/PG/0012255", name: "OLANIYI ABEL OLUSEYI", option: "Power", program: "M.Eng" },
+      { matric: "LCU/PG/006704", name: "AFE ROTIMI ABIODUN", option: "Communication", program: "PhD" },
+      { matric: "LCU/PG/0012471", name: "FAGBENRO ABDULQUADRI TIMILEHIN", option: "Power", program: "M.Eng" },
+      { matric: "LCU/PG/007951", name: "OWOLADE STEPHEN JOHNSON", option: "Power", program: "M.Eng" },
+      { matric: "LCU/PG/007640", name: "IBRAHIM BASIRAT ADEMUREWA", option: "Power", program: "M.Eng" },
+      { matric: "LCU/PG/0012284", name: "OYEMADE ADEOYE ALEX", option: "Power", program: "PGD" },
+      { matric: "LCU/PG/0010843", name: "ADEAGBO BASHIRU TEMITOPE", option: "Power", program: "M.Eng" },
+      { matric: "LCU/PG/0011752", name: "EZE ERNEST CHIBUEZE", option: "Control", program: "M.Eng" },
+      { matric: "LCU/PG/0011934", name: "OLATINSU SAMUEL OLUWASEYI", option: "Control", program: "PGD" },
+      { matric: "LCU/PG/008122", name: "OROBIYI HAMED OLAMIDE", option: "Power", program: "M.Eng" },
+      { matric: "LCU/PG/006537", name: "OYEBOLA BLESSED OLALEKAN", option: "Power", program: "PhD" },
+      { matric: "LCU/PG/0011592", name: "AKINJOBI SULAIMON GBOLA", option: "Control", program: "PGD" },
+      { matric: "LCU/PG/009339", name: "OYEDOKUN OYETOPE MUZEDIK", option: "Communication", program: "M.Eng" },
+      { matric: "LCU/PG/007535", name: "OLUFUNMILAYO KAYODE ADEMOLA", option: "Power", program: "M.Eng" },
+      { matric: "LCU/PG/0011519", name: "OGUNSANYA ISIAKA ADEOYE", option: "Communication", program: "M.Eng" },
+      { matric: "LCU/PG/0010459", name: "OYELAMI MORUFAT ADERONKE", option: "Power", program: "M.Eng" },
+      { matric: "LCU/PG/009251", name: "OGUNBODE TEMITAYO OLUSEYI", option: "Control", program: "M.Eng" },
+      { matric: "LCU/PG/007119", name: "JIMOH ADEBOWALE AHMED", option: "Control", program: "M.Eng" },
+      { matric: "LCU/PG/008022", name: "OGUNMILUA TEMITOPE OLAWUMI", option: "Control", program: "M.Eng" },
+      { matric: "LCU/PG/009751", name: "OJO JOSHUA", option: "Power", program: "PGD" },
+      { matric: "LCUPG0010281", name: "OZOMADU JOY CHIDERA", option: "Communication", program: "M.Eng" },
+      { matric: "LCUPG0010281", name: "AJALA KOLAWOLE MICHAEL", option: "Communication", program: "M.Eng" },
+      { matric: "LCUPG0010281", name: "KOLAPO TITILOPE JOHNSON", option: "Communication", program: "M.Eng" },
+      { matric: "LCUPG0010281", name: "OKE OLUWATOBILOBA JOSHUA", option: "Communication", program: "M.Eng" },
+      { matric: "LCUPG0010281", name: "OGUNLADE ISMAIL OYETUNJI", option: "Communication", program: "M.Eng" },
+      { matric: "LCUPG0010281", name: "ADENIYI OLUWASEUN ADEGBITE", option: "Communication", program: "M.Eng" },
+      { matric: "LCU/PG/0010972", name: "EKEH JEREMIAH CHUKWUNAZOM", option: "Power", program: "M.Eng" },
+      { matric: "LCU/PG/008445", name: "OLAOYE MUJEEB OLAWALE", option: "Power", program: "PGD" }
+    ];
+
+    /* Options offered by the department (from the curriculum doc). */
+    const OPTIONS = ["Power", "Control", "Communication"];
+
+    /* Maps each course code to the option(s) it belongs to, derived from the
+       Second Semester tables in the M.Eng curriculum. Courses left OUT of
+       this map (e.g. core/PGD/cross-cutting courses like GET 210, EEE 617,
+       EEE 911) are treated as open to all students — no filtering applied.
+       A course listed under more than one option (e.g. EEE 711 Seminar,
+       shared across all three) shows students from every option it's tied to. */
+    const COURSE_OPTIONS = {
+      "EEE 711": ["Power", "Control", "Communication"],   // Seminar — common to all options
+      "EEC 711": ["Power", "Control", "Communication"],   // Electrical Engineering Materials — common
+      "EEE 715": ["Power", "Control", "Communication"],   // Power Electronics — common (R in Communication)
+      "COM 713": ["Power", "Control", "Communication"],   // Signal Processing — common
+      "EEE 718": ["Power", "Control", "Communication"],   // Engineering Project Management — elective, common
+
+      "EEP 711": ["Power"],
+      "EEP 714": ["Power"],
+      "EEP 712": ["Power"],
+      "EEP 716": ["Power"],
+      "EEP 717": ["Power", "Control"],                    // elective in both Power and Control
+
+      "EEC 712": ["Control"],
+      "EEC 713": ["Control"],
+      "EEC 714": ["Control"],
+
+      "COM 711": ["Communication"],
+      "COM 712": ["Communication"],
+      "COM 714": ["Communication"],
+      "COM 715": ["Communication"],                       // Satellite Communications
+      "COM 716": ["Communication"]                         // Network Security — elective
+    };
+
+    /* Rating criteria — add/remove/reorder fields here and everything else
+       (rendering, validation, submission) follows automatically. */
+    const RATING_FIELDS = [
+      { key: "performance", label: "Performance" },
+      { key: "assimilation", label: "Assimilation" },
+      { key: "attendance", label: "Attendance" },
+      { key: "participation", label: "Participation (Class &amp; Assignments)" },
+      { key: "examScore", label: "Exam Performance" }
+    ];
+
+    /* Maps the numeric scale to its label. Used to convert 1–5 into
+       "4 – More Good" style text before the row is sent to Sheets. */
+    const SCALE_LABELS = {
+      1: "Poor",
+      2: "Better",
+      3: "Neutral",
+      4: "More Good",
+      5: "Excellent"
+    };
+
+    /* ⚠️ REQUIRED: paste your deployed Google Apps Script Web App URL here.
+       See the setup instructions provided alongside this file. */
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_BtDHqDKWVVX5_Fqgfmfm_ZttMuQxEpUvvaGHFBV7zuDp12SQW0QHd1TLMfwXx2_3/exec";
+
+    /* =========================================================
+       2. STATE
+       ========================================================= */
+    let selectedLecturer = null;
+    let selectedCourse = null;
+    let selectedProgramFilter = 'All';
+    let currentStudentList = []; // students actually shown for the selected course
+    const ratings = {}; // matric -> { performance, assimilation, attendance, participation, examScore, comment }
+
+    /* =========================================================
+       3. RENDER: LECTURER DROPDOWN
+       ========================================================= */
+    const lecturerSelect = document.getElementById('lecturerSelect');
+    COURSE_ALLOCATION.forEach(entry => {
+      const opt = document.createElement('option');
+      opt.value = entry.lecturer;
+      opt.textContent = entry.lecturer;
+      lecturerSelect.appendChild(opt);
+    });
+
+    const programFilter = document.getElementById('programFilter');
+    programFilter.addEventListener('change', () => {
+      selectedProgramFilter = programFilter.value;
+      renderStudentContainer();
+      updateSubmitState();
+    });
+
+    lecturerSelect.addEventListener('change', () => {
+      selectedLecturer = lecturerSelect.value;
+      selectedCourse = null;
+      renderCourseList();
+      renderStudentContainer();
+      updateSubmitState();
+    });
+
+    /* =========================================================
+       4. RENDER: COURSE LIST (chips)
+       ========================================================= */
+    function renderCourseList() {
+      const list = document.getElementById('courseList');
+      list.innerHTML = '';
+
+      if (!selectedLecturer) {
+        list.innerHTML = '<p class="empty-note" style="margin-left:0;">Select a lecturer first.</p>';
+        return;
+      }
+
+      const entry = COURSE_ALLOCATION.find(e => e.lecturer === selectedLecturer);
+      if (!entry || !entry.courses || entry.courses.length === 0) {
+        list.innerHTML = '<p class="empty-note" style="margin-left:0;">No courses found for this lecturer.</p>';
+        return;
+      }
+
+      entry.courses.forEach(course => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'course-chip';
+        btn.textContent = `${course.code} — ${course.title}`;
+        btn.dataset.code = course.code;
+        btn.addEventListener('click', () => {
+          selectedCourse = course;
+          list.querySelectorAll('.course-chip').forEach(c => c.classList.remove('active'));
+          btn.classList.add('active');
+          renderStudentContainer();
+          updateSubmitState();
+        });
+        list.appendChild(btn);
+      });
+    }
+    function getProgramTag(student) {
+      const programText = (student.program || '').toLowerCase();
+      if (programText.includes('phd') || programText.includes('mphil/phd')) return 'PhD';
+      if (programText.includes('pgd')) return 'PGD';
+      if (programText.includes('m.eng')) return 'M.Eng';
+
+      const digits = (student.matric || '').match(/\d+/g)?.join('') || '';
+      if (!digits) return 'Other';
+
+      const normalizedDigits = digits.replace(/^0+/, '');
+      const firstDigit = normalizedDigits.charAt(0);
+      if (firstDigit === '9') return 'PhD';
+      if (firstDigit === '7' || firstDigit === '8') return 'M.Eng';
+      if (firstDigit === '6') return 'PGD';
+      if (['1', '2', '3', '4', '5'].includes(firstDigit)) return 'Undergrad';
+      return 'Other';
+    }
+
+    function getCourseLevelAndOptions(courseCode) {
+      const match = courseCode.match(/(\d{3})/);
+      if (!match) return { level: 'unknown', options: null };
+      const numPrefix = match[1];
+      const firstDigit = numPrefix[0];
+
+      if (firstDigit === '6') return { level: 'PGD', options: null };
+      if (firstDigit === '9') return { level: 'PhD', options: null };
+      if (firstDigit === '7' || firstDigit === '5') {
+        const allowedOptions = COURSE_OPTIONS.hasOwnProperty(courseCode) ? COURSE_OPTIONS[courseCode] : null;
+        return { level: 'MEng', options: allowedOptions };
+      }
+      return { level: 'unknown', options: null };
+    }
+
+    function getVisibleStudentsForCourse(courseCode) {
+      const { level, options } = getCourseLevelAndOptions(courseCode);
+
+      let filteredStudents = [];
+      if (level === 'PGD') {
+        filteredStudents = STUDENTS.filter(s => getProgramTag(s) === 'PGD');
+      } else if (level === 'PhD') {
+        filteredStudents = STUDENTS.filter(s => getProgramTag(s) === 'PhD');
+      } else if (level === 'MEng') {
+        filteredStudents = STUDENTS.filter(s => getProgramTag(s) === 'MSc');
+        if (Array.isArray(options) && options.length > 0) {
+          const normalizedOptions = options.map(option => (option || '').trim());
+          filteredStudents = filteredStudents.filter(student => {
+            const studentOption = (student.option || '').trim();
+            return normalizedOptions.includes(studentOption);
+          });
+        }
+      }
+
+      return selectedProgramFilter === 'All'
+        ? filteredStudents
+        : filteredStudents.filter(student => getProgramTag(student) === selectedProgramFilter);
+    }
+
+    function getStudentGroupName(student) {
+      const tag = getProgramTag(student);
+      if (tag === 'Undergrad') return 'Undergrad';
+      if (['PhD', 'M.Eng', 'PGD'].includes(tag)) return tag;
+      return 'Other';
+    }
+
+    function renderStudentContainer() {
+      const container = document.getElementById('studentContainer');
+      container.innerHTML = '';
+
+      if (!selectedCourse) {
+        container.innerHTML = '<p class="empty-note" style="margin-left:0;">Select a course to load the student list.</p>';
+        return;
+      }
+
+      // === FILTER STUDENTS BY COURSE LEVEL AND OPTION ===
+      const courseCode = selectedCourse.code;
+      const visibleStudents = getVisibleStudentsForCourse(courseCode);
+
+      // track which students are currently shown so other logic can reuse it
+      currentStudentList = visibleStudents;
+
+      if (visibleStudents.length === 0) {
+        container.innerHTML = `<p class="empty-note" style="margin-left:0;">No students match this level/program filter for this course option.</p>`;
+        return;
+      }
+
+      const groupedStudents = {
+        "PhD": [],
+        "M.Eng": [],
+        "PGD": [],
+        "Undergrad": [],
+        "Other": []
+      };
+
+      visibleStudents.forEach(student => {
+        groupedStudents[getStudentGroupName(student)].push(student);
+      });
+
+      ['PhD', 'M.Eng', 'PGD', 'Undergrad', 'Other'].forEach(groupName => {
+        const groupStudents = groupedStudents[groupName];
+        if (!groupStudents.length) return;
+
+        const section = document.createElement('div');
+        section.style.marginTop = '12px';
+        section.innerHTML = `<h4 style="margin: 0 0 10px; font-size: 1rem; color: #0f172a;">${groupName}</h4>`;
+        const groupContainer = document.createElement('div');
+        groupContainer.className = 'program-group';
+
+        groupStudents.forEach(student => {
+          if (!ratings[student.matric]) {
+            const blank = { comment: '' };
+            RATING_FIELDS.forEach(f => blank[f.key] = null);
+            ratings[student.matric] = blank;
+          }
+
+          const ratingBlocksHtml = RATING_FIELDS.map(f => `
+            <div class="rating-block">
+              <label>${f.label}</label>
+              <div class="scale" data-matric="${student.matric}" data-field="${f.key}">
+                ${[1, 2, 3, 4, 5].map(n => `<button type="button" data-val="${n}">${n}</button>`).join('')}
+              </div>
+            </div>`).join('');
+
+          const card = document.createElement('div');
+          card.className = 'student-card';
+          card.innerHTML = `
+              <div class="student-head">
+                <span class="student-name">${student.name}</span>
+                <span class="student-matric">${student.matric}</span>
+              </div>
+              <div class="student-body">
+                ${ratingBlocksHtml}
+                <div class="comment-block">
+                  <label>Comment</label>
+                  <textarea data-matric="${student.matric}" placeholder="Optional remarks on this student's performance, attendance, participation and exams..."></textarea>
+                </div>
+              </div>
+            `;
+          groupContainer.appendChild(card);
+        });
+
+        section.appendChild(groupContainer);
+        container.appendChild(section);
+      });
+
+      container.querySelectorAll('.scale').forEach(scale => {
+        const matric = scale.dataset.matric;
+        const field = scale.dataset.field;
+        scale.querySelectorAll('button').forEach(btn => {
+          btn.addEventListener('click', () => {
+            ratings[matric][field] = parseInt(btn.dataset.val, 10);
+            scale.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateSubmitState();
+          });
+        });
+      });
+
+      container.querySelectorAll('textarea').forEach(ta => {
+        ta.addEventListener('input', () => {
+          ratings[ta.dataset.matric].comment = ta.value;
+        });
+      });
+    }
+
+    /* =========================================================
+       6. SUBMIT STATE / VALIDATION
+       ========================================================= */
+    function updateSubmitState() {
+      const btn = document.getElementById('submitBtn');
+      const progressMsg = document.getElementById('progressMsg');
+
+      if (!selectedLecturer || !selectedCourse) {
+        btn.disabled = true;
+        if (progressMsg) progressMsg.textContent = '';
+        return;
+      }
+
+      // === ONLY CHECK FILTERED STUDENTS ===
+      const courseCode = selectedCourse.code;
+      const visibleStudents = getVisibleStudentsForCourse(courseCode);
+
+      const incomplete = visibleStudents.filter(s =>
+        !ratings[s.matric] || RATING_FIELDS.some(f => !ratings[s.matric][f.key])
+      );
+
+      btn.disabled = incomplete.length > 0;
+
+      if (progressMsg) {
+        if (incomplete.length === 0) {
+          progressMsg.textContent = '';
+        } else {
+          const names = incomplete.slice(0, 3).map(s => s.name.split(' ')[0]).join(', ');
+          const more = incomplete.length > 3 ? `, +${incomplete.length - 3} more` : '';
+          progressMsg.textContent =
+            `${incomplete.length} of ${visibleStudents.length} students still need ratings (${names}${more})`;
+          progressMsg.className = 'status err';
+        }
+      }
+    }
+    /* =========================================================
+       7. SUBMIT TO GOOGLE SHEETS
+       ========================================================= */
+    document.getElementById('evalForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const statusMsg = document.getElementById('statusMsg');
+      const btn = document.getElementById('submitBtn');
+
+      if (SCRIPT_URL.includes('PASTE_YOUR')) {
+        statusMsg.textContent = 'Setup incomplete: add your Apps Script URL in the code before using this form.';
+        statusMsg.className = 'status err';
+        return;
+      }
+
+      btn.disabled = true;
+      statusMsg.textContent = 'Submitting…';
+      statusMsg.className = 'status';
+
+      const rows = STUDENTS.map(s => {
+        const { comment, ...studentRatings } = ratings[s.matric]; // destructure this student's ratings out
+        const row = {
+          timestamp: new Date().toISOString(),
+          lecturer: selectedLecturer,
+          courseCode: selectedCourse.code,
+          courseTitle: selectedCourse.title,
+          matric: s.matric,
+          studentName: s.name
+        };
+        RATING_FIELDS.forEach(f => {
+          const val = studentRatings[f.key];          // e.g. 4
+          row[f.key] = `${val} - ${SCALE_LABELS[val]}`; // e.g. "4 - More Good"
+        });
+        row.comment = comment || '';
+        return row;
+      });
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors', // Apps Script web apps don't return CORS headers by default
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({ rows })
+        });
+
+        // no-cors means we can't read the response, so we optimistically confirm
+        statusMsg.textContent = '✓ Evaluations submitted successfully.';
+        statusMsg.className = 'status ok';
+        document.getElementById('evalForm').reset();
+        selectedLecturer = null;
+        selectedCourse = null;
+        Object.keys(ratings).forEach(k => delete ratings[k]);
+        document.getElementById('courseList').innerHTML = '<p class="empty-note" style="margin-left:0;">Select a lecturer first.</p>';
+        document.getElementById('studentContainer').innerHTML = '<p class="empty-note" style="margin-left:0;">Select a course to load the student list.</p>';
+        document.getElementById('progressMsg').textContent = '';
+      } catch (err) {
+        statusMsg.textContent = 'Submission failed — check your connection and try again.';
+        statusMsg.className = 'status err';
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+
+</html>

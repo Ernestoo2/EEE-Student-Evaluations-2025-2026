@@ -435,17 +435,7 @@
           <span><b>4</b> More Good</span>
           <span><b>5</b> Excellent</span>
         </div>
-        <div class="field-wrap" style="margin-bottom:10px;">
-          <label for="programFilter" style="display:block; margin-bottom:6px; font-weight:600;">Filter students by
-            level/program</label>
-          <select id="programFilter">
-            <option value="All">All students</option>
-            <option value="PhD">PhD</option>
-            <option value="M.Eng">M.Eng</option>
-            <option value="PGD">PGD</option>
-            <option value="Undergrad">Undergrad (100L–500L)</option>
-          </select>
-        </div>
+        <!-- program filter removed: course selection now determines visible students -->
         <div class="field-wrap" id="studentContainer">
           <p class="empty-note" style="margin-left:0;">Select a course to load the student list.</p>
         </div>
@@ -567,16 +557,20 @@
        students show up under EVERY course so nobody gets accidentally hidden
        until you tag them. */
     const STUDENTS = [
+      { matric: "LCU/PG/009009", name: "ABOLAJI IBRAHIM BABATUNDE", option: "Communication", program: "M.Eng" },
       { matric: "LCU/PG/007984", name: "ADEOGUN OLUKUNMI FRANCIS", option: "Communication", program: "MPhil/PhD" },
       { matric: "LCU/PG/008337", name: "ALASE DAVID AYOMIDE", option: "Power", program: "M.Eng" },
+      { matric: "LCU/PG/008911", name: "OLADEJO ABIODUN CALEB", option: "Communication", program: "M.Eng" },
       { matric: "LCU/PG/009627", name: "OMOGBEMINIYI AYODELE MICHAEL", option: "Power", program: "PGD" },
       { matric: "LCU/PG/007182", name: "KAZEEM OLADIMEJI LESHI", option: "Power", program: "M.Eng" },
       { matric: "LCU/PG/008438", name: "ADEKOYA DANIEL OLUSEGUN", option: "Power", program: "PhD" },
       { matric: "LCU/PG/0012537", name: "AYOOLA IDRIS OREOLUWA", option: "Power", program: "PGD" },
       { matric: "LCU/PG/0012009", name: "BALOGUN OLUWASEGUN JOSEPH", option: "Power", program: "M.Eng" },
       { matric: "LCU/PG/008940", name: "TAIWO ADEDOLAPO OLUSEYI", option: "Control", program: "M.Eng" },
+      { matric: "LCU/PG/009282", name: "AKANJI OLULEYE OLATUNBOSUN", option: "Communication", program: "M.Eng" },
       { matric: "PG/LCU/007953", name: "AROWOLO MUYIWA PAUL", option: "Power", program: "MPhil/PhD" },
       { matric: "LCU/PG/0012255", name: "OLANIYI ABEL OLUSEYI", option: "Power", program: "M.Eng" },
+      { matric: "LCU/PG/007815", name: "DARE ADERONKE ADEKEMI", option: "Communication", program: "M.Eng" },
       { matric: "LCU/PG/006704", name: "AFE ROTIMI ABIODUN", option: "Communication", program: "PhD" },
       { matric: "LCU/PG/0012471", name: "FAGBENRO ABDULQUADRI TIMILEHIN", option: "Power", program: "M.Eng" },
       { matric: "LCU/PG/007951", name: "OWOLADE STEPHEN JOHNSON", option: "Power", program: "M.Eng" },
@@ -584,7 +578,9 @@
       { matric: "LCU/PG/0012284", name: "OYEMADE ADEOYE ALEX", option: "Power", program: "PGD" },
       { matric: "LCU/PG/0010843", name: "ADEAGBO BASHIRU TEMITOPE", option: "Power", program: "M.Eng" },
       { matric: "LCU/PG/0011752", name: "EZE ERNEST CHIBUEZE", option: "Control", program: "M.Eng" },
+      { matric: "LCU/PG/007258", name: "BUSARI OLUKAYODE AYODEJI", option: "Communication", program: "M.Eng" },
       { matric: "LCU/PG/0011934", name: "OLATINSU SAMUEL OLUWASEYI", option: "Control", program: "PGD" },
+      { matric: "LCU/PG/009330", name: "OYETOSO MODUPEOLU OPEYEMI", option: "Communication", program: "M.Eng" },
       { matric: "LCU/PG/008122", name: "OROBIYI HAMED OLAMIDE", option: "Power", program: "M.Eng" },
       { matric: "LCU/PG/006537", name: "OYEBOLA BLESSED OLALEKAN", option: "Power", program: "PhD" },
       { matric: "LCU/PG/0011592", name: "AKINJOBI SULAIMON GBOLA", option: "Control", program: "PGD" },
@@ -594,14 +590,10 @@
       { matric: "LCU/PG/0010459", name: "OYELAMI MORUFAT ADERONKE", option: "Power", program: "M.Eng" },
       { matric: "LCU/PG/009251", name: "OGUNBODE TEMITAYO OLUSEYI", option: "Control", program: "M.Eng" },
       { matric: "LCU/PG/007119", name: "JIMOH ADEBOWALE AHMED", option: "Control", program: "M.Eng" },
+      { matric: "LCU/PG/006530", name: "ADERANTI ADEREMI TAIWO", option: "Communication", program: "MPhil" },
       { matric: "LCU/PG/008022", name: "OGUNMILUA TEMITOPE OLAWUMI", option: "Control", program: "M.Eng" },
       { matric: "LCU/PG/009751", name: "OJO JOSHUA", option: "Power", program: "PGD" },
       { matric: "LCUPG0010281", name: "OZOMADU JOY CHIDERA", option: "Communication", program: "M.Eng" },
-      { matric: "LCUPG0010281", name: "AJALA KOLAWOLE MICHAEL", option: "Communication", program: "M.Eng" },
-      { matric: "LCUPG0010281", name: "KOLAPO TITILOPE JOHNSON", option: "Communication", program: "M.Eng" },
-      { matric: "LCUPG0010281", name: "OKE OLUWATOBILOBA JOSHUA", option: "Communication", program: "M.Eng" },
-      { matric: "LCUPG0010281", name: "OGUNLADE ISMAIL OYETUNJI", option: "Communication", program: "M.Eng" },
-      { matric: "LCUPG0010281", name: "ADENIYI OLUWASEUN ADEGBITE", option: "Communication", program: "M.Eng" },
       { matric: "LCU/PG/0010972", name: "EKEH JEREMIAH CHUKWUNAZOM", option: "Power", program: "M.Eng" },
       { matric: "LCU/PG/008445", name: "OLAOYE MUJEEB OLAWALE", option: "Power", program: "PGD" }
     ];
@@ -668,7 +660,6 @@
        ========================================================= */
     let selectedLecturer = null;
     let selectedCourse = null;
-    let selectedProgramFilter = 'All';
     let currentStudentList = []; // students actually shown for the selected course
     const ratings = {}; // matric -> { performance, assimilation, attendance, participation, examScore, comment }
 
@@ -683,12 +674,7 @@
       lecturerSelect.appendChild(opt);
     });
 
-    const programFilter = document.getElementById('programFilter');
-    programFilter.addEventListener('change', () => {
-      selectedProgramFilter = programFilter.value;
-      renderStudentContainer();
-      updateSubmitState();
-    });
+    // programFilter UI removed; course selection alone controls visible students
 
     lecturerSelect.addEventListener('change', () => {
       selectedLecturer = lecturerSelect.value;
@@ -736,7 +722,7 @@
       const programText = (student.program || '').toLowerCase();
       if (programText.includes('phd') || programText.includes('mphil/phd')) return 'PhD';
       if (programText.includes('pgd')) return 'PGD';
-      if (programText.includes('m.eng')) return 'M.Eng';
+      if (programText.includes('msc') || programText.includes('m.sc') || programText.includes('m.eng') || programText.includes('mphil')) return 'MSc';
 
       const digits = (student.matric || '').match(/\d+/g)?.join('') || '';
       if (!digits) return 'Other';
@@ -744,7 +730,7 @@
       const normalizedDigits = digits.replace(/^0+/, '');
       const firstDigit = normalizedDigits.charAt(0);
       if (firstDigit === '9') return 'PhD';
-      if (firstDigit === '7' || firstDigit === '8') return 'M.Eng';
+      if (firstDigit === '7' || firstDigit === '8') return 'MSc';
       if (firstDigit === '6') return 'PGD';
       if (['1', '2', '3', '4', '5'].includes(firstDigit)) return 'Undergrad';
       return 'Other';
@@ -784,15 +770,16 @@
         }
       }
 
-      return selectedProgramFilter === 'All'
-        ? filteredStudents
-        : filteredStudents.filter(student => getProgramTag(student) === selectedProgramFilter);
+      // Return the students determined by course level/option only.
+      // Do not apply the separate `selectedProgramFilter` UI filter here —
+      // we want the course selection to determine who is shown.
+      return filteredStudents;
     }
 
     function getStudentGroupName(student) {
       const tag = getProgramTag(student);
       if (tag === 'Undergrad') return 'Undergrad';
-      if (['PhD', 'M.Eng', 'PGD'].includes(tag)) return tag;
+      if (['PhD', 'MSc', 'PGD'].includes(tag)) return tag;
       return 'Other';
     }
 
@@ -813,13 +800,13 @@
       currentStudentList = visibleStudents;
 
       if (visibleStudents.length === 0) {
-        container.innerHTML = `<p class="empty-note" style="margin-left:0;">No students match this level/program filter for this course option.</p>`;
+        container.innerHTML = `<p class="empty-note" style="margin-left:0;">No students match this course selection.</p>`;
         return;
       }
 
       const groupedStudents = {
         "PhD": [],
-        "M.Eng": [],
+        "MSc": [],
         "PGD": [],
         "Undergrad": [],
         "Other": []
@@ -829,7 +816,7 @@
         groupedStudents[getStudentGroupName(student)].push(student);
       });
 
-      ['PhD', 'M.Eng', 'PGD', 'Undergrad', 'Other'].forEach(groupName => {
+      ['PhD', 'MSc', 'PGD', 'Undergrad', 'Other'].forEach(groupName => {
         const groupStudents = groupedStudents[groupName];
         if (!groupStudents.length) return;
 

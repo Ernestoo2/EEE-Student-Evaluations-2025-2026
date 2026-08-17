@@ -936,8 +936,15 @@
       statusMsg.textContent = 'Submitting…';
       statusMsg.className = 'status';
 
-      const rows = STUDENTS.map(s => {
-        const { comment, ...studentRatings } = ratings[s.matric]; // destructure this student's ratings out
+      // Only submit rows for students currently shown for the selected course.
+      // `currentStudentList` is populated by `renderStudentContainer()`.
+      const studentsToSubmit = (currentStudentList && currentStudentList.length)
+        ? currentStudentList
+        : getVisibleStudentsForCourse(selectedCourse.code);
+
+      const rows = studentsToSubmit.map(s => {
+        const ratingEntry = ratings[s.matric] || {};
+        const { comment = '', ...studentRatings } = ratingEntry;
         const row = {
           timestamp: new Date().toISOString(),
           lecturer: selectedLecturer,
@@ -947,8 +954,8 @@
           studentName: s.name
         };
         RATING_FIELDS.forEach(f => {
-          const val = studentRatings[f.key];          // e.g. 4
-          row[f.key] = `${val} - ${SCALE_LABELS[val]}`; // e.g. "4 - More Good"
+          const val = studentRatings[f.key];
+          row[f.key] = val ? `${val} - ${SCALE_LABELS[val]}` : '';
         });
         row.comment = comment || '';
         return row;
